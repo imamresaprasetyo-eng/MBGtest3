@@ -1,0 +1,10 @@
+CREATE EVENT IF NOT EXISTS reset_transaksi_selesai_harian
+ON SCHEDULE EVERY 1 DAY
+STARTS TIMESTAMP(
+    CURRENT_DATE + INTERVAL IF(CURRENT_TIME < '07:00:00', 0, 1) DAY,
+    '07:00:00'
+)
+ON COMPLETION PRESERVE
+ENABLE
+DO DELETE FROM db_mbg.transaksi_mbg
+WHERE status IN ('Selesai', 'Terlambat');
